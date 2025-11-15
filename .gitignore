@@ -19,7 +19,7 @@ out/
 node_modules/
 .wrangler
 wrangler-state.toml
-.wrangler.jsonc
+wrangler.jsonc
 
 # env
 .env
