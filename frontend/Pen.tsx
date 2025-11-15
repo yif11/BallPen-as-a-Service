@@ -5,15 +5,13 @@ export default function Pen() {
   const [penTipOut, setPenTipOut] = useState(false);
   const [pressCount, setPressCount] = useState(0);
 
-  // 初期状態
   useEffect(() => {
-    const init = async () => {
-      const res = await fetch("http://localhost:8787/state");
-      const data = (await res.json()) as { penTipOut: boolean; pressCount: number };
-      setPenTipOut(data.penTipOut);
-      setPressCount(data.pressCount);
-    };
-    init().catch(console.error);
+    fetch("http://localhost:8787/state")
+      .then(res => res.json())
+      .then(data => {
+        setPenTipOut(data.penTipOut);
+        setPressCount(data.pressCount);
+      });
   }, []);
 
   const handleDown = () => {
@@ -24,8 +22,7 @@ export default function Pen() {
   const handleUp = async () => {
     setIsPressedDown(false);
     const res = await fetch("http://localhost:8787/release", { method: "POST" });
-    const data = (await res.json()) as { penTipOut: boolean; pressCount: number };
-
+    const data = await res.json();
     setPenTipOut(data.penTipOut);
     setPressCount(data.pressCount);
   };
