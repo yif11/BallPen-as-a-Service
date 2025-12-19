@@ -1,1 +1,1 @@
-npx @biomejs/biome check --write ./src/
+npx @biomejs/biome check --write ./

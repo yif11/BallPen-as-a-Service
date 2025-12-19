@@ -1,4 +1,5 @@
 import { Hono } from "hono";
+import { logger } from "hono/logger";
 
 type KVNamespace = {
   get(key: string): Promise<string | null>;
@@ -7,9 +8,11 @@ type KVNamespace = {
 
 type Bindings = {
   PEN_STATE: KVNamespace;
+  ASSETS: { fetch: (request: Request) => Promise<Response> };
 };
-
 const app = new Hono<{ Bindings: Bindings }>();
+
+app.use(logger());
 
 // CORS middleware for local development
 app.use('*', async (c, next) => {
@@ -43,7 +46,7 @@ async function incrementPressCount(kv: KVNamespace) {
   return n;
 }
 
-app.get("/", (c) => c.json({ message: "BallPen API running" }));
+// app.get("/", (c) => c.json({ message: "BallPen API running" }));
 
 app.get("/state", async (c) => {
   const kv = c.env.PEN_STATE;
@@ -69,5 +72,7 @@ app.post("/release", async (c) => {
     pressCount: count,
   });
 });
+
+app.get("/*", (c) => c.env.ASSETS.fetch(c.req.raw));
 
 export default app;

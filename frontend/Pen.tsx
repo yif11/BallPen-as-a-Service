@@ -6,7 +6,7 @@ export default function Pen() {
   const [pressCount, setPressCount] = useState(0);
 
   useEffect(() => {
-    fetch("http://localhost:8787/state")
+    fetch("/state")
       .then(res => res.json())
       .then(data => {
         setPenTipOut(data.penTipOut);
@@ -16,12 +16,12 @@ export default function Pen() {
 
   const handleDown = () => {
     setIsPressedDown(true);
-    fetch("http://localhost:8787/press", { method: "POST" });
+    fetch("/press", { method: "POST" });
   };
 
   const handleUp = async () => {
     setIsPressedDown(false);
-    const res = await fetch("http://localhost:8787/release", { method: "POST" });
+    const res = await fetch("/release", { method: "POST" });
     const data = await res.json();
     setPenTipOut(data.penTipOut);
     setPressCount(data.pressCount);
@@ -35,10 +35,10 @@ export default function Pen() {
     <div
       onPointerDown={handleDown}
       onPointerUp={handleUp}
-      className="w-screen h-screen"
+      className="w-screen h-screen relative"
     >
       <img src={img} className="w-full h-full object-cover" />
-      <div className="absolute top-4 left-4 text-white text-2xl">
+      <div className="absolute top-4 left-4 text-black text-2xl z-10 drop-shadow pointer-events-none">
         Press Count: {pressCount}
       </div>
     </div>
