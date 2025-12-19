@@ -21,6 +21,7 @@ export default function Pen() {
 
   const handleUp = async () => {
     setIsPressedDown(false);
+    setPenTipOut((prev) => !prev);
     const res = await fetch("/release", { method: "POST" });
     const data = await res.json();
     setPenTipOut(data.penTipOut);
