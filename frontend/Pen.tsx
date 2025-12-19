@@ -39,7 +39,11 @@ export default function Pen() {
       onContextMenu={(e) => e.preventDefault()}
       className="w-screen h-screen relative touch-none select-none"
     >
-      <img src={img} className="w-full h-full object-contain" />
+      <img
+        src={img}
+        className="w-full h-full object-contain pointer-events-none"
+        draggable={false}
+      />
       <div className="absolute top-4 left-4 text-black text-2xl z-10 drop-shadow pointer-events-none">
         Press Count: {pressCount}
       </div>
