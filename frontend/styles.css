@@ -10,6 +10,11 @@ body {
 .object-cover { object-fit: cover; }
 .object-contain { object-fit: contain; }
 .touch-none { touch-action: none; }
+.select-none {
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
 .absolute { position: absolute; }
 .top-4 { top: 1rem; }
 .left-4 { left: 1rem; }

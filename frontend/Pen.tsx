@@ -36,7 +36,8 @@ export default function Pen() {
     <div
       onPointerDown={handleDown}
       onPointerUp={handleUp}
-      className="w-screen h-screen relative touch-none"
+      onContextMenu={(e) => e.preventDefault()}
+      className="w-screen h-screen relative touch-none select-none"
     >
       <img src={img} className="w-full h-full object-contain" />
       <div className="absolute top-4 left-4 text-black text-2xl z-10 drop-shadow pointer-events-none">
