@@ -1,0 +1,25 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "ballpen-as-a-service",
+	"compatibility_date": "2025-08-03",
+	"main": "./src/index.ts",
+	"assets": {
+		"directory": "./dist/client",
+		"binding": "ASSETS"
+	},
+	"kv_namespaces": [
+		// {
+		// 	"binding": "PEN_STATE",
+		// 	"id": "xxxxx",
+		// 	"preview_id": "xxxxx"
+		// },
+		{
+			"binding": "PEN_STATE",
+			"id": "68eebc1e73d849febecbf6d39412a0da"
+		}
+	],
+	"preview_urls": false,
+	"routes": [
+	  { "pattern": "ballpen-as-a-service.kinoh.net", "custom_domain": true }
+	]
+}
