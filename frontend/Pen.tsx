@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 export default function Pen() {
 	const [isPressedDown, setIsPressedDown] = useState(false);
 	const [penTipOut, setPenTipOut] = useState(false);
 	const [pressCount, setPressCount] = useState(0);
+	const processingRef = useRef<Promise<void>>(Promise.resolve());
 
 	useEffect(() => {
 		fetch("/state")
@@ -19,13 +20,15 @@ export default function Pen() {
 		fetch("/press", { method: "POST" });
 	};
 
-	const handleUp = async () => {
+	const handleUp = () => {
 		setIsPressedDown(false);
 		setPenTipOut((prev) => !prev);
-		const res = await fetch("/release", { method: "POST" });
-		const data = await res.json();
-		setPenTipOut(data.penTipOut);
-		setPressCount(data.pressCount);
+		processingRef.current = processingRef.current.then(async () => {
+			const res = await fetch("/release", { method: "POST" });
+			const data = await res.json();
+			setPenTipOut(data.penTipOut);
+			setPressCount(data.pressCount);
+		});
 	};
 
 	let img = "/pen-in.png";
