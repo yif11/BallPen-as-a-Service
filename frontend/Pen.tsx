@@ -1,4 +1,9 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+
+type PenState = {
+	penTipOut: boolean;
+	pressCount: number;
+};
 
 export default function Pen() {
 	const [isPressedDown, setIsPressedDown] = useState(false);
@@ -10,8 +15,9 @@ export default function Pen() {
 		fetch("/state")
 			.then((res) => res.json())
 			.then((data) => {
-				setPenTipOut(data.penTipOut);
-				setPressCount(data.pressCount);
+				const state = data as PenState;
+				setPenTipOut(state.penTipOut);
+				setPressCount(state.pressCount);
 			});
 	}, []);
 
@@ -23,9 +29,10 @@ export default function Pen() {
 	const handleUp = () => {
 		setIsPressedDown(false);
 		setPenTipOut((prev) => !prev);
+		setPressCount((prev) => prev + 1);
 		processingRef.current = processingRef.current.then(async () => {
 			const res = await fetch("/release", { method: "POST" });
-			const data = await res.json();
+			const data = (await res.json()) as PenState;
 			setPenTipOut(data.penTipOut);
 			setPressCount(data.pressCount);
 		});

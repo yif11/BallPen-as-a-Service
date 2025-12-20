@@ -7,6 +7,20 @@
 		"directory": "./dist/client",
 		"binding": "ASSETS"
 	},
+	"durable_objects": {
+		"bindings": [
+			{
+				"name": "PEN",
+				"class_name": "PenDO"
+			}
+		]
+	},
+	"migrations": [
+		{
+			"tag": "v1",
+			"new_classes": ["PenDO"]
+		}
+	],
 	"kv_namespaces": [
 		// {
 		// 	"binding": "PEN_STATE",
