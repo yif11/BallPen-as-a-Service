@@ -18,7 +18,7 @@
 	"migrations": [
 		{
 			"tag": "v1",
-			"new_classes": ["PenDO"]
+			"new_sqlite_classes": ["PenDO"]
 		}
 	],
 	"kv_namespaces": [
