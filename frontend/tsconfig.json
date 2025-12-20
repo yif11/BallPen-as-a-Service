@@ -1,6 +1,6 @@
 {
-  "extends": "../tsconfig.json",
-  "compilerOptions": {
-    "jsxImportSource": "react"
-  }
+	"extends": "../tsconfig.json",
+	"compilerOptions": {
+		"jsxImportSource": "react"
+	}
 }

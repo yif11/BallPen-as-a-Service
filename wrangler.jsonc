@@ -20,6 +20,6 @@
 	],
 	"preview_urls": false,
 	"routes": [
-	  { "pattern": "ballpen-as-a-service.kinoh.net", "custom_domain": true }
+		{ "pattern": "ballpen-as-a-service.kinoh.net", "custom_domain": true }
 	]
 }
