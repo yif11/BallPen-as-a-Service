@@ -1,8 +1,10 @@
 /// <reference lib="dom" />
 
-import React from "react";
 import ReactDOM from "react-dom/client";
 import Pen from "./Pen";
 import "./styles.css";
 
-ReactDOM.createRoot(document.getElementById("root")!).render(<Pen />);
+const root = document.getElementById("root");
+if (root) {
+	ReactDOM.createRoot(root).render(<Pen />);
+}
