@@ -23,11 +23,13 @@ export default function Pen() {
 
 	const handleDown = () => {
 		setIsPressedDown(true);
+		new Audio("/press.mp3").play().catch(() => {});
 		fetch("/press", { method: "POST" });
 	};
 
 	const handleUp = () => {
 		setIsPressedDown(false);
+		new Audio("/release.mp3").play().catch(() => {});
 		setPenTipOut((prev) => !prev);
 		setPressCount((prev) => prev + 1);
 		processingRef.current = processingRef.current.then(async () => {
@@ -38,9 +40,9 @@ export default function Pen() {
 		});
 	};
 
-	let img = "/pen-in.png";
-	if (isPressedDown) img = "/pen-pressed.png";
-	else if (penTipOut) img = "/pen-out.png";
+	let img = "/pen-in.jpg";
+	if (isPressedDown) img = "/pen-pressed.jpg";
+	else if (penTipOut) img = "/pen-out.jpg";
 
 	return (
 		<div
