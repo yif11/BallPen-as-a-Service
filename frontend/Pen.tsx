@@ -23,6 +23,12 @@ export default function Pen() {
 	});
 
 	useEffect(() => {
+		// Preload images
+		["/pen-in.jpg", "/pen-pressed.jpg", "/pen-out.jpg"].forEach((src) => {
+			const img = new Image();
+			img.src = src;
+		});
+
 		fetch("/state")
 			.then((res) => res.json())
 			.then((data) => {
