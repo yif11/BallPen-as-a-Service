@@ -11,6 +11,17 @@ export default function Pen() {
 	const [pressCount, setPressCount] = useState(0);
 	const processingRef = useRef<Promise<void>>(Promise.resolve());
 
+	const [pressAudio] = useState(() => {
+		const audio = new Audio("/press.mp3");
+		audio.preload = "auto";
+		return audio;
+	});
+	const [releaseAudio] = useState(() => {
+		const audio = new Audio("/release.mp3");
+		audio.preload = "auto";
+		return audio;
+	});
+
 	useEffect(() => {
 		fetch("/state")
 			.then((res) => res.json())
@@ -23,13 +34,15 @@ export default function Pen() {
 
 	const handleDown = () => {
 		setIsPressedDown(true);
-		new Audio("/press.mp3").play().catch(() => {});
+		pressAudio.currentTime = 0;
+		pressAudio.play().catch(() => {});
 		fetch("/press", { method: "POST" });
 	};
 
 	const handleUp = () => {
 		setIsPressedDown(false);
-		new Audio("/release.mp3").play().catch(() => {});
+		releaseAudio.currentTime = 0;
+		releaseAudio.play().catch(() => {});
 		setPenTipOut((prev) => !prev);
 		setPressCount((prev) => prev + 1);
 		processingRef.current = processingRef.current.then(async () => {
