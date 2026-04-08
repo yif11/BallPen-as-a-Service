@@ -1,15 +1,64 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 type PenState = {
 	penTipOut: boolean;
 	pressCount: number;
 };
 
+// iOS requires AudioContext to be created/resumed during user interaction
+function createAudioPlayer() {
+	let audioContext: AudioContext | null = null;
+	const buffers: Map<string, AudioBuffer> = new Map();
+
+	const ensureContext = () => {
+		if (!audioContext) {
+			audioContext = new AudioContext();
+		}
+		if (audioContext.state === "suspended") {
+			audioContext.resume();
+		}
+		return audioContext;
+	};
+
+	const loadSound = async (url: string) => {
+		if (buffers.has(url)) return;
+		try {
+			const ctx = ensureContext();
+			const response = await fetch(url);
+			const arrayBuffer = await response.arrayBuffer();
+			const audioBuffer = await ctx.decodeAudioData(arrayBuffer);
+			buffers.set(url, audioBuffer);
+		} catch {
+			// Ignore loading errors
+		}
+	};
+
+	const play = (url: string) => {
+		try {
+			const ctx = ensureContext();
+			const buffer = buffers.get(url);
+			if (buffer) {
+				const source = ctx.createBufferSource();
+				source.buffer = buffer;
+				source.connect(ctx.destination);
+				source.start(0);
+			}
+		} catch {
+			// Ignore playback errors
+		}
+	};
+
+	return { loadSound, play, ensureContext };
+}
+
+const audioPlayer = createAudioPlayer();
+
 export default function Pen() {
 	const [isPressedDown, setIsPressedDown] = useState(false);
 	const [penTipOut, setPenTipOut] = useState(false);
 	const [pressCount, setPressCount] = useState(0);
 	const processingRef = useRef<Promise<void>>(Promise.resolve());
+	const soundsLoadedRef = useRef(false);
 
 	useEffect(() => {
 		// Preload images
@@ -27,15 +76,24 @@ export default function Pen() {
 			});
 	}, []);
 
+	const loadSoundsOnFirstInteraction = useCallback(() => {
+		if (soundsLoadedRef.current) return;
+		soundsLoadedRef.current = true;
+		audioPlayer.ensureContext();
+		audioPlayer.loadSound("/press.mp3");
+		audioPlayer.loadSound("/release.mp3");
+	}, []);
+
 	const handleDown = () => {
+		loadSoundsOnFirstInteraction();
 		setIsPressedDown(true);
-		new Audio("/press.mp3").play().catch(() => {});
+		audioPlayer.play("/press.mp3");
 		fetch("/press", { method: "POST" });
 	};
 
 	const handleUp = () => {
 		setIsPressedDown(false);
-		new Audio("/release.mp3").play().catch(() => {});
+		audioPlayer.play("/release.mp3");
 		setPenTipOut((prev) => !prev);
 		setPressCount((prev) => prev + 1);
 		processingRef.current = processingRef.current.then(async () => {
